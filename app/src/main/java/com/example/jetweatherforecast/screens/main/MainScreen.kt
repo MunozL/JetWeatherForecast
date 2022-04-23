@@ -44,27 +44,24 @@ fun MainScreen(
 
     if (!unitFromDb.isNullOrEmpty()) {
         unit = unitFromDb[0].unit.split(" ")[0].lowercase()
-        isImperial = unit == "imperial"
-
-        val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-            initialValue = DataOrException(loading = true)) {
-            value = mainViewModel.getWeatherData(city = curCity,
-              units = unit)
-        }.value
-
-        if (weatherData.loading == true) {
-            CircularProgressIndicator()
-        }else if (weatherData.data != null) {
-            MainScaffold(weather = weatherData.data!!, navController,
-                isImperial = isImperial)
-
-        }
-
     }
 
+    isImperial = unit == "imperial"
 
+    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+        initialValue = DataOrException(loading = true)) {
+        value = mainViewModel.getWeatherData(city = curCity,
+          units = unit)
+    }.value
 
+    if (weatherData.loading == true) {
+        CircularProgressIndicator()
+    } else if (weatherData.data != null) {
+        MainScaffold(weather = weatherData.data!!, navController,
+            isImperial = isImperial)
+    }
 }
+
 @Composable
 fun MainScaffold(
     weather: Weather, navController: NavController, isImperial: Boolean
